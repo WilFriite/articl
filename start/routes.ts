@@ -8,6 +8,11 @@
 */
 
 import router from "@adonisjs/core/services/router";
-import HomeController from "#controllers/home_controller";
 
-router.get("/", [HomeController, "index"]);
+const HomeController = () => import("#controllers/home_controller");
+const SignupController = () => import("#controllers/signup_controller");
+
+router.get("/", [HomeController, "index"]).as("home");
+
+router.get("/signup", [SignupController, "show"]).as("signup.show");
+router.post("/signup", [SignupController, "store"]).as("signup.store");
