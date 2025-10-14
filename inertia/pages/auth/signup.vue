@@ -13,7 +13,7 @@ import Button from '~/components/ui/button/Button.vue'
 
   const form = useForm<FormData>({
     username: '',
-    email: 'test@test.com',
+    email: '',
     password: '',
     accept_terms: false,
     file: null
