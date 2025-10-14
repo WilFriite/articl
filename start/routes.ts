@@ -8,5 +8,6 @@
 */
 
 import router from "@adonisjs/core/services/router";
+import HomeController from "#controllers/home_controller";
 
-router.on("/").renderInertia("home");
+router.get("/", [HomeController, "index"]);
