@@ -16,12 +16,12 @@ jobs:
     - name: 📦 Récupération du Code
       uses: actions/checkout@v4
       
-    # 2. Configuration de l'environnement Node.js (avec pnpm)
-    - name: ⚙️ Configuration de Node.js et pnpm
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20' # Assurez-vous d'utiliser la bonne version
-        cache: 'pnpm'       # Active la mise en cache des dépendances pnpm
+    # # 2. Configuration de l'environnement Node.js (avec pnpm)
+    # - name: ⚙️ Configuration de Node.js et pnpm
+    #   uses: actions/setup-node@v4
+    #   with:
+    #     node-version: '20' # Assurez-vous d'utiliser la bonne version
+    #     cache: 'pnpm'       # Active la mise en cache des dépendances pnpm
         
     - name: 📥 Installation de pnpm
       run: npm install -g pnpm # Installe pnpm globalement
