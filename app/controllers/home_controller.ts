@@ -13,10 +13,10 @@ export default class HomeController {
     logger.info(`isAuthenticated: ${isAuthenticated}`);
     logger.info(`auth.isAuthenticated: ${auth.isAuthenticated}`);
     return inertia.render("home", {
-      ssl: db.config.connections["postgres"].connection.ssl as boolean,
+      ssl: db.config.connections["postgres"].connection?.ssl as boolean,
     });
   }
-  public async stream({ inertia, logger }: HttpContext) {
+  public async stream({ inertia }: HttpContext) {
     const url = await drive
       .use("s3")
       .getSignedUrl("190830_0941_720P_4000K_91110481.mp4");
