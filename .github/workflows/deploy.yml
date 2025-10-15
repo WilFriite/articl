@@ -53,13 +53,31 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
           APP_DIR="/home/${{ secrets.EC2_USER }}/myapp" 
-          cd $APP_DIR
+          # --- NOUVELLE LOGIQUE DE DÉMARRAGE ---
           
-          # Remarque : La machine EC2 doit déjà avoir Node.js et PM2 installés (voir script d'initialisation).
-          # PM2 exécute 'npm start' par défaut si le 'package.json' est dans le répertoire.
-          # Si vous avez besoin que PM2 utilise pnpm pour démarrer, changez la commande :
-          # pm2 reload my-node-app || pm2 start pnpm --name "my-node-app" -- start
+          # 1. Se déplacer dans le répertoire de l'application transférée
+          cd $APP_DIR 
           
-          pm2 reload my-node-app || pm2 start npm --name "my-node-app" -- start 
+          # 2. Exécuter l'installation des dépendances de production
+          # C'est souvent nécessaire si le build utilise des packages, mais l'exécution aussi.
+          # Si le dossier 'build' est 100% autonome, sautez cette ligne.
+          pnpm install --prod 
+
+          # 3. Démarrer/Redémarrer PM2 en pointant vers le dossier 'build'
+          # Nous supposons que le point d'entrée est dans 'build', et que PM2 doit s'y lancer.
+          # S'il existe déjà, PM2 le met à jour, sinon il le démarre.
           
-          pm2 save
+          # --- OPTION 1: PM2 démarre le script direct dans /build ---
+          # Remplacez index.js par votre point d'entrée réel (ex: server.js)
+          PM2_COMMAND="pm2 start $APP_DIR/build/index.js --name \"my-node-app\""
+          
+          # Si l'application existe, utilisez 'reload' (pour un redémarrage doux)
+          # Sinon, utilisez la commande de 'start' complète
+          pm2 describe my-node-app > /dev/null
+          if [ $? -eq 0 ]; then
+            pm2 reload my-node-app
+          else
+            $PM2_COMMAND
+          fi
+          
+          pm2 save 
