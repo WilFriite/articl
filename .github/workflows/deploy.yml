@@ -16,33 +16,35 @@ jobs:
     - name: 📦 Récupération du Code
       uses: actions/checkout@v4
       
-    # 2. Configuration de l'environnement Node.js
-    - name: ⚙️ Configuration de Node.js
+    # 2. Configuration de l'environnement Node.js (avec pnpm)
+    - name: ⚙️ Configuration de Node.js et pnpm
       uses: actions/setup-node@v4
       with:
         node-version: '20' # Assurez-vous d'utiliser la bonne version
+        cache: 'pnpm'       # Active la mise en cache des dépendances pnpm
+        
+    - name: 📥 Installation de pnpm
+      run: npm install -g pnpm # Installe pnpm globalement
         
     # 3. Installation des dépendances et Build (Exécuté sur GitHub)
-    - name: 🏗️ Installation et Construction du Projet
+    - name: 🏗️ Installation (pnpm) et Construction du Projet
       run: |
-        npm install
-        npm run build 
+        pnpm install  # Utilise pnpm pour installer les dépendances
+        pnpm run build # Utilise pnpm pour lancer la commande de construction
         
     # --- Déploiement vers EC2 ---
 
     # 4. Transfert des Fichiers (SCP - Secure Copy)
-    # Cette action copie tous les fichiers, y compris le dossier 'build', vers l'EC2.
     - name: 💾 Transfert des Fichiers (SCP)
       uses: appleboy/scp-action@master
       with:
         host: ${{ secrets.EC2_HOST }}
         username: ${{ secrets.EC2_USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
-        source: "." # Transférer tout le contenu du répertoire courant GitHub
-        target: "/home/${{ secrets.EC2_USER }}/myapp" # Cible sur l'instance EC2
+        source: "." 
+        target: "/home/${{ secrets.EC2_USER }}/myapp" 
         
     # 5. Redémarrage de l'Application (SSH - Remote Command)
-    # Cette action exécute les commandes sur l'EC2 pour mettre à jour l'application.
     - name: 🔄 Redémarrage de l'Application (SSH)
       uses: appleboy/ssh-action@master
       with:
@@ -53,11 +55,11 @@ jobs:
           APP_DIR="/home/${{ secrets.EC2_USER }}/myapp" 
           cd $APP_DIR
           
-          echo "Dossier actuel : $PWD"
+          # Remarque : La machine EC2 doit déjà avoir Node.js et PM2 installés (voir script d'initialisation).
+          # PM2 exécute 'npm start' par défaut si le 'package.json' est dans le répertoire.
+          # Si vous avez besoin que PM2 utilise pnpm pour démarrer, changez la commande :
+          # pm2 reload my-node-app || pm2 start pnpm --name "my-node-app" -- start
           
-          # Mise à jour et redémarrage de l'application via PM2
-          # Utilise 'reload' pour un redémarrage doux si l'app existe, sinon 'start'
-          pm2 reload my-node-app || pm2 start npm --name "my-node-app" -- start
+          pm2 reload my-node-app || pm2 start npm --name "my-node-app" -- start 
           
-          # Enregistrer l'état de PM2 pour qu'il redémarre après un reboot de l'EC2
           pm2 save
