@@ -8,10 +8,13 @@ const dbConfig = defineConfig({
     postgres: {
       client: "pg",
       connection: {
-        ssl: {
-          ca: fs.readFileSync("./global-bundle.pem").toString(),
-          rejectUnauthorized: true,
-        },
+        ssl:
+          env.get("NODE_ENV") === "production"
+            ? {
+                ca: fs.readFileSync("./global-bundle.pem").toString(),
+                rejectUnauthorized: true,
+              }
+            : false,
 
         host: env.get("DB_HOST"),
         port: env.get("DB_PORT"),

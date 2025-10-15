@@ -40,7 +40,7 @@ import Button from '~/components/ui/button/Button.vue'
     class="flex flex-col items-center justify-center w-full h-full"
     style="min-height: 100vh"
   >
-    <form @submit.prevent="onSubmit()">
+    <form @submit.prevent="onSubmit()" class="flex flex-col items-center justify-center w-full max-w-3/4 h-full gap-4 p-4">
       <div class="flex flex-col items-center justify-center w-full h-full gap-4 border rounded-md p-4">
         <div class="flex flex-col items-center justify-center w-full h-full">
           <h1 class="text-3xl font-bold">Sign up</h1>
