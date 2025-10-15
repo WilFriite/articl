@@ -1,6 +1,5 @@
 import type { HttpContext } from "@adonisjs/core/http";
 import drive from "@adonisjs/drive/services/main";
-import db from "@adonisjs/lucid/services/db";
 import User from "#models/user";
 
 export default class HomeController {
@@ -12,9 +11,7 @@ export default class HomeController {
     logger.info(`Users count: ${usersCount.length}`);
     logger.info(`isAuthenticated: ${isAuthenticated}`);
     logger.info(`auth.isAuthenticated: ${auth.isAuthenticated}`);
-    return inertia.render("home", {
-      ssl: db.config.connections["postgres"].connection?.ssl as boolean,
-    });
+    return inertia.render("home");
   }
   public async stream({ inertia }: HttpContext) {
     const url = await drive

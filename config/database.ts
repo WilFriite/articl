@@ -1,3 +1,4 @@
+import fs from "node:fs";
 import { defineConfig } from "@adonisjs/lucid";
 import env from "#start/env";
 
@@ -7,7 +8,11 @@ const dbConfig = defineConfig({
     postgres: {
       client: "pg",
       connection: {
-        ssl: env.get("NODE_ENV") === "production",
+        ssl: {
+          ca: fs.readFileSync("./global-bundle.pem").toString(),
+          rejectUnauthorized: true,
+        },
+
         host: env.get("DB_HOST"),
         port: env.get("DB_PORT"),
         user: env.get("DB_USER"),
