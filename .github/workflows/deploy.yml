@@ -53,6 +53,7 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
           APP_DIR="/home/${{ secrets.EC2_USER }}/myapp" 
+          BUILD_DIR="$APP_DIR/build"
           # --- NOUVELLE LOGIQUE DE DÉMARRAGE ---
           
           # 1. Se déplacer dans le répertoire de l'application transférée
@@ -66,10 +67,11 @@ jobs:
           # 3. Démarrer/Redémarrer PM2 en pointant vers le dossier 'build'
           # Nous supposons que le point d'entrée est dans 'build', et que PM2 doit s'y lancer.
           # S'il existe déjà, PM2 le met à jour, sinon il le démarre.
+          echo ${{ secrets.ENV_VARS }} > $BUILD_DIR/.env
           
           # --- OPTION 1: PM2 démarre le script direct dans /build ---
           # Remplacez index.js par votre point d'entrée réel (ex: server.js)
-          PM2_COMMAND="pm2 start $APP_DIR/build/index.js --name \"my-node-app\""
+          PM2_COMMAND="pm2 start $BUILD_DIR/bin/server.js --name articl"
           
           # Si l'application existe, utilisez 'reload' (pour un redémarrage doux)
           # Sinon, utilisez la commande de 'start' complète
