@@ -7,6 +7,13 @@
 import type { MakeTuyauRequest, MakeTuyauResponse } from "@tuyau/utils/types";
 import type { InferInput } from "@vinejs/vine/types";
 
+type StreamGetHead = {
+  request: unknown;
+  response: MakeTuyauResponse<
+    import("../app/controllers/home_controller.ts").default["stream"],
+    false
+  >;
+};
 type SignupGetHead = {
   request: unknown;
   response: MakeTuyauResponse<
@@ -24,6 +31,11 @@ type SignupPost = {
   >;
 };
 export interface ApiDefinition {
+  stream: {
+    $url: {};
+    $get: StreamGetHead;
+    $head: StreamGetHead;
+  };
   signup: {
     $url: {};
     $get: SignupGetHead;
@@ -45,6 +57,13 @@ const routes = [
     path: "/",
     method: ["GET", "HEAD"],
     types: {} as unknown,
+  },
+  {
+    params: [],
+    name: "stream",
+    path: "/stream",
+    method: ["GET", "HEAD"],
+    types: {} as StreamGetHead,
   },
   {
     params: [],
