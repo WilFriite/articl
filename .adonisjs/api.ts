@@ -30,6 +30,20 @@ type SignupPost = {
     true
   >;
 };
+type VerifyemailIdGetHead = {
+  request: unknown;
+  response: MakeTuyauResponse<
+    import("../app/controllers/email_verifications_controller.ts").default["verify"],
+    false
+  >;
+};
+type VerifyemailResendPost = {
+  request: unknown;
+  response: MakeTuyauResponse<
+    import("../app/controllers/email_verifications_controller.ts").default["resend"],
+    false
+  >;
+};
 export interface ApiDefinition {
   stream: {
     $url: {};
@@ -41,6 +55,17 @@ export interface ApiDefinition {
     $get: SignupGetHead;
     $head: SignupGetHead;
     $post: SignupPost;
+  };
+  "verify-email": {
+    ":token": {
+      $url: {};
+      $get: VerifyemailIdGetHead;
+      $head: VerifyemailIdGetHead;
+    };
+    resend: {
+      $url: {};
+      $post: VerifyemailResendPost;
+    };
   };
 }
 const routes = [
@@ -78,6 +103,27 @@ const routes = [
     path: "/signup",
     method: ["POST"],
     types: {} as SignupPost,
+  },
+  {
+    params: [],
+    name: "logout",
+    path: "/logout",
+    method: ["GET", "HEAD"],
+    types: {} as unknown,
+  },
+  {
+    params: ["token"],
+    name: "email.verify",
+    path: "/verify-email/:token",
+    method: ["GET", "HEAD"],
+    types: {} as VerifyemailIdGetHead,
+  },
+  {
+    params: [],
+    name: "email.resend",
+    path: "/verify-email/resend",
+    method: ["POST"],
+    types: {} as VerifyemailResendPost,
   },
 ] as const;
 export const api = {

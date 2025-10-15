@@ -48,7 +48,7 @@ export default class EmailVerificationsController {
    * Resend verification email
    */
   public async resend({ auth, response, session }: HttpContext) {
-    const user = auth.user!;
+    const user = auth.getUserOrFail();
 
     if (user.isEmailVerified) {
       session.flash("info", "Email is already verified");

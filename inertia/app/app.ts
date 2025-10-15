@@ -4,6 +4,7 @@
 import "../css/app.css";
 import { resolvePageComponent } from "@adonisjs/inertia/helpers";
 import { createInertiaApp } from "@inertiajs/vue3";
+import { QueryClient, VueQueryPlugin } from "@tanstack/vue-query";
 import { TuyauPlugin } from "@tuyau/inertia/vue";
 import type { DefineComponent } from "vue";
 import { createApp, h } from "vue";
@@ -11,6 +12,9 @@ import Layout from "~/components/layout/app.vue";
 import { tuyau } from "./tuyau";
 
 const appName = import.meta.env.VITE_APP_NAME || "AdonisJS";
+
+// Access QueryClient instance
+const queryClient = new QueryClient();
 
 createInertiaApp({
   progress: { color: "#5468FF" },
@@ -35,6 +39,7 @@ createInertiaApp({
     createApp({ render: () => h(App, props) })
       .use(plugin)
       .use(TuyauPlugin, { client: tuyau })
+      .use(VueQueryPlugin, { queryClient })
       .mount(el);
   },
 });

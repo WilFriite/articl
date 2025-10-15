@@ -1,16 +1,21 @@
 <script lang="ts" setup>
 import Header from './header.vue'
 import { usePageProps } from '~/lib/use_page_props'
+import { useMutation } from '@tanstack/vue-query'
+import { tuyau } from '~/app/tuyau'
+import Button from '~/components/ui/button/Button.vue'
 
 const pageProps = usePageProps()
 
+const { isPending, error, mutateAsync } = useMutation({
+  mutationKey: ['resend-email'],
+  mutationFn: async () => {
+    await tuyau.$route('email.resend').$post()
+  },
+})
+
 const resendVerification = () => {
-  // This will be handled by a form submission to the resend route
-  const form = document.createElement('form')
-  form.method = 'POST'
-  form.action = '/verify-email/resend'
-  document.body.appendChild(form)
-  form.submit()
+  mutateAsync()
 }
 </script>
 
@@ -28,9 +33,13 @@ const resendVerification = () => {
         <div class="ml-3">
           <p class="text-sm">
             Please verify your email address. Check your inbox for a verification link.
-            <button @click="resendVerification" class="ml-2 text-yellow-600 hover:text-yellow-500 underline">
+            <Button 
+              @click="resendVerification" 
+              :disabled="isPending"
+              :loading="isPending"
+            >
               Resend verification email
-            </button>
+            </Button>
           </p>
         </div>
       </div>

@@ -1,7 +1,5 @@
 import type { HttpContext } from "@adonisjs/core/http";
 import drive from "@adonisjs/drive/services/main";
-import mail from "@adonisjs/mail/services/main";
-import WelcomeNotification from "#mails/welcome_notification";
 import User from "#models/user";
 
 export default class HomeController {
@@ -9,11 +7,6 @@ export default class HomeController {
     const usersCount = await User.query().select("id");
 
     const isAuthenticated = await auth.check();
-
-    if (isAuthenticated) {
-      logger.info(`Sending welcome email to ${auth.user!.email}`);
-      await mail.send(new WelcomeNotification(auth.user!));
-    }
 
     logger.info(`Users count: ${usersCount.length}`);
     logger.info(`isAuthenticated: ${isAuthenticated}`);
