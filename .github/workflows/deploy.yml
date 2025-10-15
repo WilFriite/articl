@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main # Déclencher ce workflow à chaque 'push' sur la branche principale
+      - master
 
 jobs:
   deploy:
