@@ -67,7 +67,6 @@ jobs:
           # 3. Démarrer/Redémarrer PM2 en pointant vers le dossier 'build'
           # Nous supposons que le point d'entrée est dans 'build', et que PM2 doit s'y lancer.
           # S'il existe déjà, PM2 le met à jour, sinon il le démarre.
-          echo ${{ secrets.ENV_VARS }} > $BUILD_DIR/.env
           
           # --- OPTION 1: PM2 démarre le script direct dans /build ---
           # Remplacez index.js par votre point d'entrée réel (ex: server.js)
