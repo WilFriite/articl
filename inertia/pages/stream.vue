@@ -14,8 +14,7 @@ defineProps<{
     <Head title="Stream" />
   <div>
     <video controls>
-      <source :src="url + '#t=10,20'" type="video/mp4">
-      <source :src="url + '#t=10,20'" type="">
+      <source :src="url + '#t=10'" type="video/mp4">
     </video>
   </div>
 </template>

@@ -75,9 +75,9 @@ jobs:
           
           # Si l'application existe, utilisez 'reload' (pour un redémarrage doux)
           # Sinon, utilisez la commande de 'start' complète
-          pm2 describe my-node-app > /dev/null
+          pm2 describe articl > /dev/null
           if [ $? -eq 0 ]; then
-            pm2 reload my-node-app
+            pm2 reload articl
           else
             $PM2_COMMAND
           fi
